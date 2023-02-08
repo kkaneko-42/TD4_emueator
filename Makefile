@@ -5,7 +5,7 @@ OBJS		:= $(SRCS:.cpp=.o)
 DEPS		:= $(OBJS:.o=.d)
 
 CXX			:= c++
-CXXFLAGS	:= -Wall -Wextra -Werror
+CXXFLAGS	:= -MMD -MP #-Wall -Wextra -Werror
 
 $(NAME): $(OBJS)
 	$(CXX) $(CXXFLAGS) $^ -o $@
@@ -20,5 +20,7 @@ fclean: clean
 	rm -f $(NAME)
 
 re: fclean $(NAME)
+
+-include $(DEPS)
 
 .PHONY: clean fclean re

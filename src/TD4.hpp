@@ -5,6 +5,8 @@
 #include <iostream>
 #include <bitset>
 
+#define ROM_SIZE 16
+
 namespace td4 {
     enum OpeCode {
         ADD_REG_A     = 0b0000,
@@ -50,16 +52,18 @@ namespace td4 {
             TD4( void );
             void run( void );
             void setInPort( unsigned char value ) {
-                // 下位4bitマスクして代入
+                // 下位4bitをマスクして代入
                 _ports.in = value & 0b1111;
             }
             unsigned char getOutPort( void ) { return _ports.out; }
+            void setROM( unsigned char* rom ) { _rom = rom; }
 
         private:
             typedef void (TD4::*Operation)( void );
             std::map<OpeCode, Operation> _operationMap;
 
             unsigned char fetch( void );
+            unsigned char fetch_debug( void );
             bool decode( unsigned char op );
             void execute( void );
             void addRegA( void );
@@ -80,5 +84,7 @@ namespace td4 {
 
             OpeCode _opecode;
             Operand _operand;
+
+            unsigned char* _rom;
     };
 }

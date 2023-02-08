@@ -12,6 +12,8 @@ TD4::TD4( void ) {
     _ports.in = 0;
     _ports.out = 0;
 
+    _rom = nullptr;
+
     _operationMap[ADD_REG_A]        = &TD4::addRegA;
     _operationMap[ADD_REG_B]        = &TD4::addRegB;
     _operationMap[MOV_REG_A_IMM]    = &TD4::movRegAImm;
@@ -31,9 +33,9 @@ void TD4::run( void ) {
 
     while (true) {
         _registers.print();
-        unsigned char op = fetch();
+        unsigned char code = fetch();
         
-        if (!decode(op)) {
+        if (!decode(code)) {
             fprintf(stderr, "invalid operation");
             break;
         }
@@ -43,6 +45,17 @@ void TD4::run( void ) {
 }
 
 unsigned char TD4::fetch( void ) {
+    if (_rom == nullptr) {
+        throw std::runtime_error("ROM is not set");
+    }
+
+    unsigned char code = _rom[_registers.pc];
+    _registers.pc = ((_registers.pc + 1) & 0b1111);
+
+    return code;
+}
+
+unsigned char TD4::fetch_debug( void ) {
     // ROMからfetchして、pcをインクリメント
     // 実験用に標準入力から受け取る
     char buf[1024];

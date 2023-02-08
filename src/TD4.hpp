@@ -40,10 +40,20 @@ namespace td4 {
         }
     };
 
+    struct Ports {
+        unsigned char in; // 4bit
+        unsigned char out; // 4bit
+    };
+
     class TD4 {
         public:
             TD4( void );
             void run( void );
+            void setInPort( unsigned char value ) {
+                // 下位4bitマスクして代入
+                _ports.in = value & 0b1111;
+            }
+            unsigned char getOutPort( void ) { return _ports.out; }
 
         private:
             typedef void (TD4::*Operation)( void );
@@ -60,8 +70,13 @@ namespace td4 {
             void movRegBA( void );
             void jmp( void );
             void jnc( void );
+            void inA( void );
+            void inB( void );
+            void outB( void );
+            void outImm( void );
 
             Registers _registers;
+            Ports _ports;
 
             OpeCode _opecode;
             Operand _operand;

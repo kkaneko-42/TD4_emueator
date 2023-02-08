@@ -9,6 +9,9 @@ TD4::TD4( void ) {
     _registers.carry_flag = 0;
     _registers.pc = 0;
 
+    _ports.in = 0;
+    _ports.out = 0;
+
     _operationMap[ADD_REG_A]        = &TD4::addRegA;
     _operationMap[ADD_REG_B]        = &TD4::addRegB;
     _operationMap[MOV_REG_A_IMM]    = &TD4::movRegAImm;
@@ -17,6 +20,10 @@ TD4::TD4( void ) {
     _operationMap[MOV_REG_B_A]      = &TD4::movRegBA;
     _operationMap[JMP]              = &TD4::jmp;
     _operationMap[JNC]              = &TD4::jnc;
+    _operationMap[IN_A]             = &TD4::inA;
+    _operationMap[IN_B]             = &TD4::inB;
+    _operationMap[OUT_B]            = &TD4::outB;
+    _operationMap[OUT_IMM]          = &TD4::outImm;
 }
 
 void TD4::run( void ) {
@@ -104,4 +111,20 @@ void TD4::jnc( void ) {
     if (_registers.carry_flag == 0) {
         jmp();
     }
+}
+
+void TD4::inA( void ) {
+    _registers.reg_a = _ports.in;
+}
+
+void TD4::inB( void ) {
+    _registers.reg_b = _ports.in;
+}
+
+void TD4::outB( void ) {
+    _ports.out = _registers.reg_b;
+}
+
+void TD4::outImm( void ) {
+    _ports.out = _operand.imm;
 }

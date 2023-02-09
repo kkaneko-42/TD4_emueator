@@ -29,19 +29,21 @@ TD4::TD4( void ) {
 }
 
 void TD4::run( void ) {
-    unsigned char opcode = 0, imm = 0;
-
     while (true) {
-        _registers.print();
-        unsigned char code = fetch();
-        
-        if (!decode(code)) {
-            fprintf(stderr, "invalid operation");
-            break;
-        }
-
-        execute();
+        consumeClock();
     }
+}
+
+void TD4::consumeClock( void ) {
+    // _registers.print();
+    unsigned char code = fetch();
+    
+    if (!decode(code)) {
+        fprintf(stderr, "invalid operation");
+        return;
+    }
+
+    execute();
 }
 
 unsigned char TD4::fetch( void ) {

@@ -47,10 +47,16 @@ namespace td4 {
         unsigned char out; // 4bit
     };
 
+    class TD4_test;
+
     class TD4 {
         public:
+            #ifdef TEST
+            friend TD4_test;
+            #endif
             TD4( void );
             void run( void );
+            void consumeClock( void );
             void setInPort( unsigned char value ) {
                 // 下位4bitをマスクして代入
                 _ports.in = value & 0b1111;
